@@ -3,38 +3,31 @@ import urllib, urllib2
 
 link = "http://www.magazineluiza.com.br/"
 
-response = urllib2.urlopen(link).read()
-
-soup = BeautifulSoup(response, "html.parser");
-
 pages = set()
-emails = set()
 
+#Retorna o parsing do BeautifulSoup
+def getData(link):
+    response = urllib2.urlopen(link).read();
+    return BeautifulSoup(response, "html.parser")
+
+#Pega os Links - Com recursão
 def getLinks(url):
     global pages
 
-    response = urllib2.urlopen(url).read();
-    soup = BeautifulSoup(response, "html.parser")
-    
-    for link in soup.findAll("a"):
+    data = getData(url)
+
+    for link in data.findAll("a"):
         
         try:
             #Evitando links repetidos
             if link["href"] not in pages:
                 print link.get_text() + " - " + link["href"]        
                 pages.add(link["href"])
+                getLinks(link["href"])
 
         except:
             pass
 
-def crawler(inicial):
-    global pages 
-    pages.add(inicial)
-
-    for page in pages:
-        getLinks(page)
-
-
-crawler(link)
+getLinks(link)
 
     
