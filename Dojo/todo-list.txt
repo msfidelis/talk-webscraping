@@ -1,0 +1,4 @@
+Requests
+Parsing
+Armazenar os dados na lista
+Recursão
